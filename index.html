@@ -465,7 +465,7 @@
       return String(str).replace(/[&<>"']/g, s => ({
         "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
       }[s]));
-    }
+    } 
 
     // Generate a tiny inline SVG "image" (data URI) per ingredient/category.
     function svgThumb(item){

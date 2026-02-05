@@ -311,6 +311,24 @@
       font-weight: 900;
     }
 
+    #confettiCanvas{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .valentineGif{
+      margin-top: 12px;
+      max-width: 280px;
+      border: 4px solid var(--hotpink);
+      box-shadow: 0 8px 16px rgba(0,0,0,.5);
+      border-radius: 8px;
+    }
+
     @media (max-width: 860px){
       .grid{ grid-template-columns: 1fr; }
       .opts{ grid-template-columns: 1fr; }
@@ -324,6 +342,8 @@
       <a href="vanessa.html">Vanessa.exe</a>
     </div>
   </div>
+
+  <canvas id="confettiCanvas"></canvas>
 
   <div class="wrap">
     <div class="marquee">
@@ -375,7 +395,9 @@
           </div>
           <div class="confetti" id="confetti">
             🎉🎉🎉 LET’S GOOOOOO 🎉🎉🎉<br/>
-            Ok texting you RIGHT NOW. Also: you are the best. 💖
+            I love you so much bebe! Can't wait to spend valentines with you at Hotel EMC2 💖
+            <br/>
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzh4dzk0OHNiaDd0Yzk0a2piejVra2FraDF5MGdxZWFhYnA3dGxhcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qKQQUKSSbWBkO2V3KX/giphy.gif" alt="Valentine celebration" class="valentineGif" />
           </div>
         </div>
       </div>
@@ -586,6 +608,78 @@
       elConfetti.style.display = "block";
       elYes.textContent = "YES 💚 (LOCKED IN)";
       elNo.style.display = "none";
+      launchConfetti();
+    });
+
+    // Confetti animation
+    const canvas = document.getElementById("confettiCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confettiPieces = [];
+    const colors = ['#ff33cc', '#00ffff', '#b6ff00', '#ffe600', '#ff6b9d', '#c71585'];
+
+    class ConfettiPiece {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = -20;
+        this.size = Math.random() * 8 + 4;
+        this.speedY = Math.random() * 3 + 2;
+        this.speedX = Math.random() * 2 - 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = Math.random() * 10 - 5;
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.rotation += this.rotationSpeed;
+        
+        if (this.y > canvas.height) {
+          return false; // remove this piece
+        }
+        return true;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      confettiPieces = confettiPieces.filter(piece => {
+        piece.update();
+        piece.draw();
+        return piece.y < canvas.height;
+      });
+
+      if (confettiPieces.length > 0) {
+        requestAnimationFrame(animateConfetti);
+      }
+    }
+
+    function launchConfetti() {
+      // Create lots of confetti pieces
+      for (let i = 0; i < 150; i++) {
+        setTimeout(() => {
+          confettiPieces.push(new ConfettiPiece());
+        }, i * 10);
+      }
+      animateConfetti();
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
 
     render();
