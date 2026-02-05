@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,11 +9,8 @@
     :root{
       --bg: #0b0f14;
       --panel: #121826;
-      --panel2:#0f1420;
       --text:#e8eef7;
       --muted:#a7b3c6;
-      --chip:#1d2a44;
-      --chip2:#223355;
       --accent:#ff4d4d;
       --accent2:#ffb020;
       --border: rgba(255,255,255,.10);
@@ -38,20 +34,57 @@
     .wrap{
       max-width: 1100px;
       margin: 0 auto;
-      padding: 28px 18px 60px;
+      padding: 18px 18px 60px;
     }
+
+    /* NAV */
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin: 0 -18px 18px;
+      padding: 10px 18px;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,20,.65);
+      border-bottom: 1px solid var(--border);
+    }
+    .navInner{
+      max-width: 1100px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800;
+      letter-spacing:-.02em;
+    }
+    .flame{
+      width: 18px; height: 18px; border-radius: 6px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 16px rgba(255,77,77,.45);
+    }
+    .navLinks{ display:flex; gap:10px; align-items:center; }
+    .navLink{
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      transition: transform .06s ease, background .18s ease;
+      font-size: 14px;
+    }
+    .navLink:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
+
     header{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap: 16px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+    .title{ display:flex; flex-direction:column; gap:8px; }
     h1{
       margin:0;
       font-size: clamp(26px, 4vw, 40px);
@@ -122,11 +155,7 @@
       color:var(--text);
       font-size: 14px;
     }
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; }
     .chip{
       user-select:none;
       cursor:pointer;
@@ -144,7 +173,6 @@
       border-color: rgba(255,77,77,.45);
       box-shadow: 0 0 0 1px rgba(255,77,77,.15) inset;
     }
-
     .stats{
       color: var(--muted);
       font-size: 13px;
@@ -170,7 +198,7 @@
       display:flex;
       flex-direction:column;
       gap: 10px;
-      min-height: 142px;
+      min-height: 160px;
       position: relative;
       overflow:hidden;
     }
@@ -184,14 +212,38 @@
       transform: rotate(25deg);
       pointer-events:none;
     }
+
+    .thumbRow{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+    }
+    .thumb{
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .thumb img{
+      width: 44px; height: 44px;
+      display:block;
+    }
+
     .top{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap: 10px;
+      width: 100%;
     }
     .name{
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing:-0.01em;
       margin:0;
       font-size: 16px;
@@ -204,6 +256,7 @@
       padding:6px 8px;
       border-radius: 999px;
       white-space: nowrap;
+      height: fit-content;
     }
     .meta{
       display:flex;
@@ -266,12 +319,24 @@
   </style>
 </head>
 <body>
+  <div class="nav">
+    <div class="navInner">
+      <div class="brand">
+        <span class="flame"></span>
+        <span>Hot Pot Pages</span>
+      </div>
+      <div class="navLinks">
+        <a class="navLink" href="vanessa.html">Vanessa</a>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <header>
       <div class="title">
         <h1>Hot Pot Ingredients</h1>
         <p class="subtitle">
-          Tap a category to filter, or search by ingredient. This is a single-file site (HTML + inline CSS) perfect for GitHub Pages.
+          Filter, search, and build your dream pot. Each ingredient includes a little “image” (inline SVG thumbnail) so this stays GitHub Pages-friendly.
         </p>
       </div>
       <div class="badge" title="spice level vibe check">
@@ -300,7 +365,7 @@
 
     <section class="panel footer">
       <div>
-        Tip: add your own ingredients by editing the <code>INGREDIENTS</code> list in this file.
+        Tip: edit the <code>INGREDIENTS</code> list in this file to add/remove items.
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn" id="randomBtn">Pick something random 🎲</button>
@@ -310,54 +375,42 @@
   </div>
 
   <script>
-    // Edit this list to customize your site.
     const INGREDIENTS = [
-      // Proteins
       { name: "Thin-sliced beef", category: "Protein", prep: "Swish 5–15s", note: "Ribeye/brisket style slices." },
-      { name: "Lamb slices", category: "Protein", prep: "Swish 10–20s", note: "Amazing with cumin/sesame dip." },
+      { name: "Lamb slices", category: "Protein", prep: "Swish 10–20s", note: "Elite with sesame + chili." },
       { name: "Pork belly", category: "Protein", prep: "Cook 30–60s", note: "Rich—great in spicy broth." },
       { name: "Shrimp", category: "Protein", prep: "Cook 1–2 min", note: "Shell-on for more flavor." },
-      { name: "Fish balls", category: "Protein", prep: "Cook 3–5 min", note: "Bouncy texture; watch for center heat." },
-      { name: "Spam", category: "Protein", prep: "Cook 30–60s", note: "Unreasonably good. Don’t @ me." },
+      { name: "Fish balls", category: "Protein", prep: "Cook 3–5 min", note: "Bouncy texture; heat through." },
+      { name: "Spam", category: "Protein", prep: "Cook 30–60s", note: "Unreasonably good." },
 
-      // Seafood
-      { name: "Scallops", category: "Seafood", prep: "Cook 1–2 min", note: "Don’t overcook—stay tender." },
-      { name: "Squid", category: "Seafood", prep: "Cook 30–60s", note: "Quick cook keeps it soft." },
+      { name: "Scallops", category: "Seafood", prep: "Cook 1–2 min", note: "Don’t overcook." },
+      { name: "Squid", category: "Seafood", prep: "Cook 30–60s", note: "Quick cook keeps it tender." },
       { name: "Mussels", category: "Seafood", prep: "Cook 3–6 min", note: "When open = ready." },
 
-      // Veggies
       { name: "Napa cabbage", category: "Vegetable", prep: "Cook 1–3 min", note: "Soaks up broth like a sponge." },
-      { name: "Bok choy", category: "Vegetable", prep: "Cook 1–2 min", note: "Leaves cook fast; stems longer." },
-      { name: "Enoki mushrooms", category: "Mushroom", prep: "Cook 30–60s", note: "Bundle, dunk, devour." },
-      { name: "Shiitake mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Score tops for extra vibe." },
-      { name: "King oyster mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Meaty bite; slice thick." },
+      { name: "Bok choy", category: "Vegetable", prep: "Cook 1–2 min", note: "Leaves fast, stems longer." },
       { name: "Lotus root", category: "Vegetable", prep: "Cook 3–6 min", note: "Crunchy, slightly sweet." },
       { name: "Daikon radish", category: "Vegetable", prep: "Cook 4–8 min", note: "Goes translucent when ready." },
       { name: "Corn", category: "Vegetable", prep: "Cook 4–6 min", note: "Sweet pops in the broth." },
 
-      // Tofu & friends
-      { name: "Firm tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Holds shape; great with sauces." },
+      { name: "Enoki mushrooms", category: "Mushroom", prep: "Cook 30–60s", note: "Bundle, dunk, devour." },
+      { name: "Shiitake mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Score tops for extra vibe." },
+      { name: "King oyster mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Meaty bite; slice thick." },
+
+      { name: "Firm tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Holds shape; sauce magnet." },
       { name: "Soft tofu", category: "Tofu", prep: "Warm 1–2 min", note: "Gentle handling. Spoon it." },
-      { name: "Fried tofu puffs", category: "Tofu", prep: "Warm 1–2 min", note: "Absorbs broth = flavor bombs." },
+      { name: "Fried tofu puffs", category: "Tofu", prep: "Warm 1–2 min", note: "Flavor bombs." },
+      { name: "Frozen tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Spongey, huge broth uptake." },
 
-      // Noodles & starch
-      { name: "Glass noodles", category: "Noodles", prep: "Cook 2–4 min", note: "Add near the end to avoid mush." },
+      { name: "Glass noodles", category: "Noodles", prep: "Cook 2–4 min", note: "Add near the end." },
       { name: "Udon", category: "Noodles", prep: "Cook 2–3 min", note: "Chewy + hearty." },
-      { name: "Ramen noodles", category: "Noodles", prep: "Cook 1–3 min", note: "Watch closely—overcooks fast." },
-      { name: "Rice cakes (tteok)", category: "Starch", prep: "Cook 3–6 min", note: "Chewy; when they float, check bite." },
-      { name: "Dumplings", category: "Starch", prep: "Cook 5–8 min", note: "Keep simmering; don’t split." },
+      { name: "Ramen noodles", category: "Noodles", prep: "Cook 1–3 min", note: "Watch closely." },
 
-      // Add-ons
-      { name: "Leafy greens mix", category: "Vegetable", prep: "Cook 30–90s", note: "Spinach/chrysanthemum greens = elite." },
-      { name: "Frozen tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Spongey texture, huge broth uptake." },
+      { name: "Rice cakes (tteok)", category: "Starch", prep: "Cook 3–6 min", note: "Chewy; check bite." },
+      { name: "Dumplings", category: "Starch", prep: "Cook 5–8 min", note: "Keep simmering; don’t split." },
     ];
 
-    const state = {
-      q: "",
-      category: "All",
-      categories: []
-    };
-
+    const state = { q: "", category: "All", categories: [] };
     const els = {
       q: document.getElementById("q"),
       chips: document.getElementById("chips"),
@@ -367,7 +420,7 @@
       resetBtn: document.getElementById("resetBtn"),
     };
 
-    function uniq(arr){ return Array.from(new Set(arr)); }
+    const uniq = (arr) => Array.from(new Set(arr));
 
     function buildCategories(){
       const cats = uniq(INGREDIENTS.map(i => i.category)).sort((a,b)=>a.localeCompare(b));
@@ -381,10 +434,7 @@
         btn.className = "chip" + (state.category === cat ? " active" : "");
         btn.textContent = cat;
         btn.type = "button";
-        btn.addEventListener("click", () => {
-          state.category = cat;
-          render();
-        });
+        btn.addEventListener("click", () => { state.category = cat; render(); });
         els.chips.appendChild(btn);
       });
     }
@@ -396,22 +446,6 @@
       if (!q) return true;
       const hay = (item.name + " " + item.category + " " + (item.note||"") + " " + (item.prep||"")).toLowerCase();
       return hay.includes(q);
-    }
-
-    function cardHTML(item){
-      return `
-        <article class="card">
-          <div class="top">
-            <h3 class="name">${escapeHTML(item.name)}</h3>
-            <span class="tag">${escapeHTML(item.category)}</span>
-          </div>
-          <div class="meta">
-            <span class="pill">⏱️ ${escapeHTML(item.prep || "Cook to taste")}</span>
-            ${item.note ? `<span class="pill">💡 ${escapeHTML(item.note)}</span>` : ""}
-          </div>
-          <p class="note">${suggestionFor(item.category)}</p>
-        </article>
-      `;
     }
 
     function suggestionFor(category){
@@ -433,58 +467,61 @@
       }[s]));
     }
 
-    function render(){
-      // update chips active state
-      Array.from(els.chips.children).forEach(btn => {
-        btn.classList.toggle("active", btn.textContent === state.category);
-      });
+    // Generate a tiny inline SVG "image" (data URI) per ingredient/category.
+    function svgThumb(item){
+      const cat = item.category;
+      const label = item.name.split(" ")[0].slice(0,10);
+      const palette = {
+        "Protein": ["#ff4d4d", "#ffb020"],
+        "Seafood": ["#57c4ff", "#8a7dff"],
+        "Vegetable": ["#43e97b", "#38f9d7"],
+        "Mushroom": ["#f7b267", "#f79d65"],
+        "Tofu": ["#e8eef7", "#a7b3c6"],
+        "Noodles": ["#ffd166", "#ef476f"],
+        "Starch": ["#cdb4db", "#ffc8dd"],
+        "All": ["#ff4d4d", "#ffb020"],
+      };
+      const [c1,c2] = palette[cat] || palette["All"];
+      const icon = iconPath(cat);
 
-      const filtered = INGREDIENTS.filter(matches);
-      els.stats.textContent = `${filtered.length} ingredient${filtered.length === 1 ? "" : "s"} shown`;
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="${c1}" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="${c2}" stop-opacity="0.95"/>
+            </linearGradient>
+            <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.35"/>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#g)"/>
+          <path d="${icon}" fill="rgba(11,15,20,.55)" filter="url(#s)"/>
+          <text x="32" y="56" text-anchor="middle" font-size="9" font-family="system-ui, -apple-system, Segoe UI" fill="rgba(11,15,20,.75)" font-weight="700">
+            ${escapeXML(label)}
+          </text>
+        </svg>
+      `.trim();
 
-      if (filtered.length === 0){
-        els.grid.innerHTML = `
-          <div class="card" style="grid-column: span 12;">
-            <h3 class="name" style="margin:0 0 8px 0;">No matches 😅</h3>
-            <p class="note" style="margin:0;">Try a different search term (e.g., "tofu", "mushroom", "beef") or reset filters.</p>
-          </div>
-        `;
-        return;
-      }
-
-      els.grid.innerHTML = filtered.map(cardHTML).join("");
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     }
 
-    els.q.addEventListener("input", (e) => {
-      state.q = e.target.value;
-      render();
-    });
+    function escapeXML(str){
+      return String(str).replace(/[<>&'"]/g, s => ({ "<":"&lt;", ">":"&gt;", "&":"&amp;", "'":"&apos;", "\"":"&quot;" }[s]));
+    }
 
-    els.randomBtn.addEventListener("click", () => {
-      const pool = INGREDIENTS.filter(matches);
-      const pick = pool[Math.floor(Math.random() * pool.length)];
-      if (!pick) return;
-      // scroll to top and highlight by re-filtering to its name briefly
-      els.q.value = pick.name;
-      state.q = pick.name;
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setTimeout(() => {
-        // keep the name in search; feels like a "picked!" moment
-      }, 150);
-    });
-
-    els.resetBtn.addEventListener("click", () => {
-      state.q = "";
-      state.category = "All";
-      els.q.value = "";
-      renderChips();
-      render();
-    });
-
-    buildCategories();
-    renderChips();
-    render();
-  </script>
-</body>
-</html>
+    function iconPath(cat){
+      // Simple icons drawn as paths within 64x64 canvas
+      switch(cat){
+        case "Protein":   // steak-ish
+          return "M18 20c8-8 22-8 30 0 6 6 5 14-2 20-9 8-22 8-30 0-7-6-8-14 2-20Zm8 9c3-3 10-3 13 0 2 2 2 5-1 7-4 3-10 3-13 0-3-2-3-5 1-7Z";
+        case "Seafood":   // fish
+          return "M16 34c10-10 22-12 32-6l6-4v20l-6-4c-10 6-22 4-32-6Zm24-4a3 3 0 1 0 0 .1Z";
+        case "Vegetable": // leaf
+          return "M20 44c16 0 26-10 26-26-16 0-26 10-26 26Zm0 0c6-10 14-18 26-26";
+        case "Mushroom":  // mushroom
+          return "M20 30c0-8 6-14 12-14s12 6 12 14H20Zm6 2h12v14c0 3-2 5-5 5h-2c-3 0-5-2-5-5V32Z";
+        case "Tofu":      // cube
+          return "M22 22h20v20H22z M24 24h16v16H24z";
+        case "Noodles":   // noodles swirl
+          return "M18 28c6-6 22-6 28 0M18 34c6-6 22-6
