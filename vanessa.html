@@ -311,16 +311,6 @@
       font-weight: 900;
     }
 
-    #confettiCanvas{
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
     .valentineGif{
       margin-top: 12px;
       max-width: 280px;
@@ -342,8 +332,6 @@
       <a href="vanessa.html">Vanessa.exe</a>
     </div>
   </div>
-
-  <canvas id="confettiCanvas"></canvas>
 
   <div class="wrap">
     <div class="marquee">
@@ -438,6 +426,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     const PAGES = [
       {
@@ -611,76 +600,38 @@
       launchConfetti();
     });
 
-    // Confetti animation
-    const canvas = document.getElementById("confettiCanvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let confettiPieces = [];
-    const colors = ['#ff33cc', '#00ffff', '#b6ff00', '#ffe600', '#ff6b9d', '#c71585'];
-
-    class ConfettiPiece {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = -20;
-        this.size = Math.random() * 8 + 4;
-        this.speedY = Math.random() * 3 + 2;
-        this.speedX = Math.random() * 2 - 1;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.rotation = Math.random() * 360;
-        this.rotationSpeed = Math.random() * 10 - 5;
-      }
-
-      update() {
-        this.y += this.speedY;
-        this.x += this.speedX;
-        this.rotation += this.rotationSpeed;
-        
-        if (this.y > canvas.height) {
-          return false; // remove this piece
-        }
-        return true;
-      }
-
-      draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate((this.rotation * Math.PI) / 180);
-        ctx.fillStyle = this.color;
-        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-        ctx.restore();
-      }
-    }
-
-    function animateConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      confettiPieces = confettiPieces.filter(piece => {
-        piece.update();
-        piece.draw();
-        return piece.y < canvas.height;
-      });
-
-      if (confettiPieces.length > 0) {
-        requestAnimationFrame(animateConfetti);
-      }
-    }
-
+    // Confetti animation using canvas-confetti library
     function launchConfetti() {
-      // Create lots of confetti pieces
-      for (let i = 0; i < 150; i++) {
-        setTimeout(() => {
-          confettiPieces.push(new ConfettiPiece());
-        }, i * 10);
-      }
-      animateConfetti();
-    }
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        // Fire confetti from different positions
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: ['#ff33cc', '#00ffff', '#b6ff00', '#ffe600', '#ff6b9d', '#c71585']
+        }));
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: ['#ff33cc', '#00ffff', '#b6ff00', '#ffe600', '#ff6b9d', '#c71585']
+        }));
+      }, 250);
+    }
 
     render();
   </script>
