@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vanessa</title>
+  <style>
+    /* 2000s internet parody aesthetic (VERY intentional) */
+    :root{
+      --hotpink:#ff33cc;
+      --cyan:#00ffff;
+      --lime:#b6ff00;
+      --yellow:#ffe600;
+      --bg1:#090018;
+      --bg2:#001a2d;
+      --text:#ffffff;
+      --border:#ffffff;
+      --shadow: 0 10px 0 rgba(0,0,0,.35);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      color: var(--text);
+      font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+      background:
+        repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 8px, rgba(0,0,0,.08) 8px 16px),
+        radial-gradient(900px 500px at 20% 15%, rgba(255,51,204,.35), transparent 55%),
+        radial-gradient(900px 500px at 80% 25%, rgba(0,255,255,.25), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,.55);
+      border-bottom: 3px solid var(--border);
+      padding: 8px 12px;
+    }
+    .navInner{
+      max-width: 980px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .nav a{
+      color: white;
+      text-decoration:none;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--hotpink), var(--cyan), var(--lime), var(--yellow));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+      text-shadow: 0 2px 0 rgba(0,0,0,.4);
+    }
+    .homeBtn{
+      color:#000 !important;
+      background: var(--yellow) !important;
+      -webkit-background-clip: border-box !important;
+      background-clip: border-box !important;
+      padding: 6px 10px;
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 12px 50px;
+    }
+
+    .marquee{
+      border: 3px solid var(--border);
+      background: #000;
+      padding: 6px 8px;
+      box-shadow: var(--shadow);
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .panel{
+      background: rgba(0,0,0,.55);
+      border: 4px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .title{
+      font-size: clamp(24px, 4vw, 36px);
+      margin: 0 0 6px 0;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.8);
+    }
+    .subtitle{
+      margin:0;
+      opacity:.92;
+      line-height: 1.35;
+    }
+
+    .badgeRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .badge{
+      border: 3px solid #000;
+      background: var(--lime);
+      color:#000;
+      font-weight: 900;
+      padding: 6px 10px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .badge.alt{ background: var(--cyan); }
+    .badge.pink{ background: var(--hotpink); color:#fff; border-color:#fff; }
+
+    .progressWrap{
+      margin-top: 12px;
+      border: 3px solid var(--border);
+      background:#000;
+      padding: 8px;
+    }
+    .progressBar{
+      height: 14px;
+      background: #222;
+      border: 2px solid #555;
+      position: relative;
+    }
+    .progressFill{
+      height: 100%;
+      width: 10%;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--hotpink) 0 10px,
+        var(--cyan) 10px 20px,
+        var(--lime) 20px 30px,
+        var(--yellow) 30px 40px
+      );
+      transition: width .25s ease;
+    }
+    .progressText{
+      margin-top: 6px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .05em;
+    }
+
+    .question{
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,.08);
+      border: 3px dashed rgba(255,255,255,.85);
+    }
+    .qTitle{
+      margin:0 0 8px;
+      font-weight: 900;
+      font-size: 18px;
+      text-shadow: 2px 2px 0 rgba(0,0,0,.7);
+    }
+    .opts{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .optBtn{
+      cursor:pointer;
+      border: 3px solid #000;
+      background: var(--yellow);
+      color:#000;
+      font-weight: 900;
+      padding: 10px 10px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+      text-transform: uppercase;
+      transition: transform .06s ease;
+      font-size: 13px;
+    }
+    .optBtn:hover{ transform: translateY(-1px); }
+    .optBtn:active{ transform: translateY(0px); }
+
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .sticker{
+      padding: 10px;
+      background: rgba(0,0,0,.7);
+      border: 4px ridge var(--border);
+      box-shadow: var(--shadow);
+    }
+    .sticker h3{
+      margin:0 0 6px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .tiny{
+      font-size: 12px;
+      opacity:.9;
+      line-height:1.35;
+    }
+
+    .ctaRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .nextBtn{
+      cursor:pointer;
+      border: 4px solid var(--border);
+      background: linear-gradient(90deg, var(--hotpink), var(--cyan), var(--lime), var(--yellow));
+      color:#000;
+      font-weight: 1000;
+      padding: 10px 12px;
+      box-shadow: 6px 6px 0 rgba(0,0,0,.7);
+      text-transform: uppercase;
+    }
+    .backBtn{
+      cursor:pointer;
+      border: 3px solid #000;
+      background: #fff;
+      color:#000;
+      font-weight: 900;
+      padding: 10px 12px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+      text-transform: uppercase;
+    }
+
+    .parodyNote{
+      margin-top: 10px;
+      padding: 10px;
+      border: 3px solid rgba(255,255,255,.85);
+      background: rgba(0,0,0,.55);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Final ask */
+    .finalWrap{
+      margin-top: 12px;
+      padding: 14px;
+      border: 4px solid var(--border);
+      background: rgba(0,0,0,.6);
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .bigAsk{
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 1000;
+      text-transform: uppercase;
+      margin: 8px 0 4px;
+      background: linear-gradient(90deg, var(--hotpink), var(--cyan), var(--lime), var(--yellow));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.85);
+    }
+    .heartRow{
+      font-size: 28px;
+      letter-spacing: 6px;
+      margin: 0 0 12px;
+      filter: drop-shadow(0 4px 0 rgba(0,0,0,.7));
+    }
+    .yesBtn{
+      cursor:pointer;
+      border: 4px solid #000;
+      background: var(--lime);
+      color:#000;
+      font-weight: 1000;
+      padding: 14px 18px;
+      box-shadow: 6px 6px 0 rgba(0,0,0,.7);
+      text-transform: uppercase;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    .noBtn{
+      cursor:pointer;
+      position: relative;
+      border: 4px solid #000;
+      background: var(--hotpink);
+      color:#fff;
+      font-weight: 1000;
+      padding: 14px 18px;
+      box-shadow: 6px 6px 0 rgba(0,0,0,.7);
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    .confetti{
+      display:none;
+      margin-top: 10px;
+      padding: 12px;
+      border: 4px dotted var(--yellow);
+      background: rgba(0,0,0,.5);
+      font-weight: 900;
+    }
+
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+      .opts{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="navInner">
+      <a href="index.html" class="homeBtn">← Back</a>
+      <a href="vanessa.html">Vanessa.exe</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="marquee">
+      <marquee behavior="alternate" scrollamount="10">
+        ⭐✨ CONGRATS VANESSA!!! YOU HAVE BEEN SELECTED FOR A TOTALLY LEGIT INTERNET EXPERIENCE ✨⭐
+      </marquee>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h1 class="title" id="pageTitle">Loading...</h1>
+        <p class="subtitle" id="pageSubtitle"></p>
+
+        <div class="badgeRow">
+          <div class="badge">Y2K Certified</div>
+          <div class="badge alt">Pop-up Resistant*</div>
+          <div class="badge pink">Dial-Up Ready</div>
+        </div>
+
+        <div class="progressWrap">
+          <div class="progressBar" aria-label="progress">
+            <div class="progressFill" id="progressFill"></div>
+          </div>
+          <div class="progressText" id="progressText"></div>
+        </div>
+
+        <div class="question" id="questionBox" style="margin-top:14px;">
+          <p class="qTitle" id="qTitle"></p>
+          <div class="opts" id="opts"></div>
+
+          <div class="ctaRow">
+            <button class="backBtn" id="backBtn">Back</button>
+            <button class="nextBtn" id="nextBtn">Next ▶</button>
+          </div>
+
+          <div class="parodyNote">
+            <strong>Important:</strong> This page is a <em>parody</em> of early-2000s “WINNER!!!” websites.
+            There is <strong>no real prize</strong>, no data collection, and no weird links — just ✨vibes✨.
+          </div>
+        </div>
+
+        <div class="finalWrap" id="finalWrap" style="display:none;">
+          <div class="heartRow">💖 💘 💖 💘 💖</div>
+          <div class="bigAsk">Vanessa, will you be my Valentine?</div>
+          <p style="margin:8px 0 14px; font-weight:900;">(Your answer will be legally binding in the court of Cute.)</p>
+          <div>
+            <button class="yesBtn" id="yesBtn">YES 💚</button>
+            <button class="noBtn" id="noBtn">NO 💔</button>
+          </div>
+          <div class="confetti" id="confetti">
+            🎉🎉🎉 LET’S GOOOOOO 🎉🎉🎉<br/>
+            Ok texting you RIGHT NOW. Also: you are the best. 💖
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="sticker">
+          <h3>🔥 Totally Legit Prize Center 🔥</h3>
+          <div class="tiny">
+            You have “won” a <strong>$1000 “Apple Gift Card”</strong> (NOT REAL 😅).
+            <br/><br/>
+            <strong>What you actually win:</strong> the right to receive the biggest Valentine question ever at the end.
+            <br/><br/>
+            <em>*Pop-up Resistant because I am not a monster.</em>
+          </div>
+        </div>
+
+        <div class="sticker">
+          <h3>📎 User Reviews</h3>
+          <div class="tiny">
+            “10/10, peak internet archaeology.” — Anonymous<br/>
+            “Why is there a marquee? I love it.” — Someone wise<br/>
+            “I clicked YES immediately.” — Future Vanessa (manifesting)
+          </div>
+        </div>
+
+        <div class="sticker">
+          <h3>🧠 Survey Integrity</h3>
+          <div class="tiny">
+            This survey does <strong>not</strong> collect personal info. It only measures:
+            <ul style="margin:8px 0 0; padding-left: 18px;">
+              <li>cuteness</li>
+              <li>vibes</li>
+              <li>compatibility with hot pot</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const PAGES = [
+      {
+        title: "WELCOME VANESSA!!!",
+        subtitle: "You have been chosen by The Internet™ for a 10-page survey. Answer honestly. Or don’t. It’s a vibe check.",
+        q: "First question: how iconic are you today?",
+        options: ["Literally iconic", "Quietly iconic", "Iconic but sleepy", "Iconic AND dangerous"]
+      },
+      {
+        title: "IMPORTANT COMPATIBILITY TEST",
+        subtitle: "This is definitely not a suspicious vibe… it’s science.",
+        q: "Pick a hot pot mood:",
+        options: ["Cozy & mild", "Spicy but brave", "Demon-level spicy", "Two broths (balanced queen)"]
+      },
+      {
+        title: "THE 2000s AESTHETIC CHECK",
+        subtitle: "A simpler time. A louder time. A time of questionable web design choices.",
+        q: "Choose your favorite 2000s relic:",
+        options: ["iPod click wheel", "MySpace Top 8", "MSN Messenger", "Bedazzled anything"]
+      },
+      {
+        title: "THE SNACK SECTION",
+        subtitle: "This is critical. Possibly the most important page.",
+        q: "Your ideal snack during a movie:",
+        options: ["Popcorn", "Sour candy", "Fries", "All of the above at once"]
+      },
+      {
+        title: "THE MUSIC VIBE CHECK",
+        subtitle: "Pretend you’re the main character entering a room in slow motion.",
+        q: "What’s playing?",
+        options: ["Throwback banger", "House music", "Romantic playlist", "Something chaotic (in a good way)"]
+      },
+      {
+        title: "THE DATE NIGHT MODULE",
+        subtitle: "Beep boop. Calculating chemistry…",
+        q: "Choose a date vibe:",
+        options: ["Hot pot + stroll", "Fancy dinner", "Stay in + movie", "Adventure + dessert"]
+      },
+      {
+        title: "THE ‘TOTALLY LEGIT’ PRIZE UPDATE",
+        subtitle: "Your “prize” status is being processed at dial-up speed. Please enjoy these choices.",
+        q: "Pick your reward animation:",
+        options: ["Sparkles ✨", "Fireworks 🎆", "Confetti 🎉", "A dancing banana 🍌"]
+      },
+      {
+        title: "FINAL VIBE ALIGNMENT",
+        subtitle: "We are nearing the end. The suspense is… extremely dramatic.",
+        q: "If we were a duo, we’d be:",
+        options: ["Cute & unstoppable", "Chaotic & adorable", "Cozy & iconic", "All of the above"]
+      },
+      {
+        title: "PRE-FINAL CONFIRMATION",
+        subtitle: "One last tiny test before the grand reveal.",
+        q: "On a scale of 1–10, how much do you like surprises?",
+        options: ["10 (love them)", "8 (mostly)", "6 (depends)", "4 (i’m brave though)"]
+      },
+      {
+        title: "OKAY… LAST PAGE",
+        subtitle: "Survey complete. Preparing final question. Please hold…",
+        q: "Click the best button to continue:",
+        options: ["This one", "Definitely this one", "No, THIS one", "All are correct"]
+      }
+    ];
+
+    const elTitle = document.getElementById("pageTitle");
+    const elSub = document.getElementById("pageSubtitle");
+    const elQTitle = document.getElementById("qTitle");
+    const elOpts = document.getElementById("opts");
+    const elProgressFill = document.getElementById("progressFill");
+    const elProgressText = document.getElementById("progressText");
+    const elBack = document.getElementById("backBtn");
+    const elNext = document.getElementById("nextBtn");
+    const elQuestionBox = document.getElementById("questionBox");
+    const elFinalWrap = document.getElementById("finalWrap");
+
+    const elYes = document.getElementById("yesBtn");
+    const elNo = document.getElementById("noBtn");
+    const elConfetti = document.getElementById("confetti");
+
+    let idx = 0;
+    const answers = new Array(PAGES.length).fill(null);
+
+    function render(){
+      const total = PAGES.length;
+      const page = PAGES[idx];
+
+      elTitle.textContent = page.title;
+      elSub.textContent = page.subtitle;
+      elQTitle.textContent = `Page ${idx+1}/${total}: ${page.q}`;
+
+      // progress
+      const pct = Math.round(((idx+1) / total) * 100);
+      elProgressFill.style.width = pct + "%";
+      elProgressText.textContent = `PROGRESS: ${pct}% • (DO NOT REFRESH OR YOU LOSE YOUR “PRIZE”)`;
+
+      // options
+      elOpts.innerHTML = "";
+      page.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.className = "optBtn";
+        btn.type = "button";
+        btn.textContent = opt;
+        btn.onclick = () => {
+          answers[idx] = i;
+          flashSelection(btn);
+        };
+        elOpts.appendChild(btn);
+      });
+
+      elBack.disabled = idx === 0;
+      elBack.style.opacity = idx === 0 ? 0.6 : 1;
+
+      // show survey / hide final
+      elQuestionBox.style.display = "block";
+      elFinalWrap.style.display = "none";
+    }
+
+    function flashSelection(btn){
+      const old = btn.textContent;
+      btn.textContent = "SELECTED ✅";
+      setTimeout(() => btn.textContent = old, 600);
+    }
+
+    function next(){
+      if (idx < PAGES.length - 1){
+        idx++;
+        render();
+      } else {
+        showFinal();
+      }
+    }
+
+    function back(){
+      if (idx > 0){
+        idx--;
+        render();
+      }
+    }
+
+    function showFinal(){
+      elQuestionBox.style.display = "none";
+      elFinalWrap.style.display = "block";
+      elTitle.textContent = "SURVEY COMPLETE!!!";
+      elSub.textContent = "Your results are: extremely cute. (Scientific.)";
+      elProgressFill.style.width = "100%";
+      elProgressText.textContent = "PROGRESS: 100% • FINAL BOSS UNLOCKED";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    elNext.addEventListener("click", next);
+    elBack.addEventListener("click", back);
+
+    // Make the "NO" button dodge the cursor (playful)
+    function dodge(){
+      const rect = elFinalWrap.getBoundingClientRect();
+      const maxX = Math.max(0, rect.width - elNo.offsetWidth - 20);
+      const maxY = Math.max(0, 140); // keep it in a row-ish area
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
+      elNo.style.position = "relative";
+      elNo.style.left = (x - maxX/2) + "px";
+      elNo.style.top  = (y - maxY/2) + "px";
+    }
+    elNo.addEventListener("mouseenter", dodge);
+    elNo.addEventListener("click", dodge);
+
+    elYes.addEventListener("click", () => {
+      elConfetti.style.display = "block";
+      elYes.textContent = "YES 💚 (LOCKED IN)";
+      elNo.style.display = "none";
+    });
+
+    render();
+  </script>
+</body>
+</html>
