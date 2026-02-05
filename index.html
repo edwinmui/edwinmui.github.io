@@ -1,1 +1,490 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hot Pot Ingredients</title>
+  <meta name="description" content="A simple hot pot ingredient picker for GitHub Pages." />
+  <style>
+    :root{
+      --bg: #0b0f14;
+      --panel: #121826;
+      --panel2:#0f1420;
+      --text:#e8eef7;
+      --muted:#a7b3c6;
+      --chip:#1d2a44;
+      --chip2:#223355;
+      --accent:#ff4d4d;
+      --accent2:#ffb020;
+      --border: rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 15% 10%, rgba(255,77,77,.20), transparent 60%),
+        radial-gradient(900px 500px at 85% 20%, rgba(255,176,32,.15), transparent 55%),
+        radial-gradient(1200px 700px at 50% 110%, rgba(87,196,255,.10), transparent 55%),
+        var(--bg);
+      line-height:1.4;
+    }
+    a{ color:inherit; text-decoration:none; }
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(26px, 4vw, 40px);
+      letter-spacing: -0.02em;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      max-width: 62ch;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      white-space: nowrap;
+      height: fit-content;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 16px rgba(255,77,77,.45);
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      padding: 14px;
+      margin: 16px 0 18px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .leftControls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .search{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--border);
+      background: rgba(10,14,22,.55);
+      min-width: min(420px, 92vw);
+    }
+    .search svg{ opacity:.85; }
+    .search input{
+      width: 100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size: 14px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip{
+      user-select:none;
+      cursor:pointer;
+      padding:9px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-size: 13px;
+      transition: transform .06s ease, background .18s ease, border-color .18s ease;
+    }
+    .chip:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
+    .chip.active{
+      background: linear-gradient(180deg, rgba(255,77,77,.18), rgba(255,77,77,.08));
+      border-color: rgba(255,77,77,.45);
+      box-shadow: 0 0 0 1px rgba(255,77,77,.15) inset;
+    }
+
+    .stats{
+      color: var(--muted);
+      font-size: 13px;
+      padding: 0 4px;
+      white-space: nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .card{
+      grid-column: span 4;
+      padding: 14px 14px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(300px 180px at 15% 10%, rgba(255,255,255,.07), transparent 60%),
+        rgba(12,16,25,.55);
+      box-shadow: 0 10px 20px rgba(0,0,0,.25);
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      min-height: 142px;
+      position: relative;
+      overflow:hidden;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-60px -90px auto auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,176,32,.20), transparent 62%);
+      transform: rotate(25deg);
+      pointer-events:none;
+    }
+    .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .name{
+      font-weight: 700;
+      letter-spacing:-0.01em;
+      margin:0;
+      font-size: 16px;
+    }
+    .tag{
+      font-size: 12px;
+      color: var(--muted);
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      padding:6px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      align-items:center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 8px;
+      border-radius: 999px;
+      background: rgba(34,51,85,.35);
+      border: 1px solid rgba(34,51,85,.55);
+      color: #cfe0ff;
+      font-size: 12px;
+    }
+    .note{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer{
+      margin-top: 18px;
+      padding: 14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .btn{
+      cursor:pointer;
+      border:none;
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      transition: transform .06s ease, background .18s ease, border-color .18s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
+    .btn:active{ transform: translateY(0px); }
+
+    @media (max-width: 980px){
+      .card{ grid-column: span 6; }
+    }
+    @media (max-width: 620px){
+      header{ flex-direction:column; align-items:flex-start; }
+      .card{ grid-column: span 12; }
+      .search{ min-width: 100%; }
+      .controls{ gap:12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>Hot Pot Ingredients</h1>
+        <p class="subtitle">
+          Tap a category to filter, or search by ingredient. This is a single-file site (HTML + inline CSS) perfect for GitHub Pages.
+        </p>
+      </div>
+      <div class="badge" title="spice level vibe check">
+        <span class="dot"></span>
+        <span><strong>Hot pot mode</strong> 🔥</span>
+      </div>
+    </header>
+
+    <section class="panel controls" aria-label="Controls">
+      <div class="leftControls">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M16.2 16.2 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input id="q" type="text" placeholder="Search ingredients (e.g., enoki, shrimp, tofu)..." autocomplete="off" />
+        </div>
+
+        <div class="chips" id="chips" aria-label="Category filters"></div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <main class="grid" id="grid" aria-label="Ingredient grid"></main>
+
+    <section class="panel footer">
+      <div>
+        Tip: add your own ingredients by editing the <code>INGREDIENTS</code> list in this file.
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" id="randomBtn">Pick something random 🎲</button>
+        <button class="btn" id="resetBtn">Reset filters</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Edit this list to customize your site.
+    const INGREDIENTS = [
+      // Proteins
+      { name: "Thin-sliced beef", category: "Protein", prep: "Swish 5–15s", note: "Ribeye/brisket style slices." },
+      { name: "Lamb slices", category: "Protein", prep: "Swish 10–20s", note: "Amazing with cumin/sesame dip." },
+      { name: "Pork belly", category: "Protein", prep: "Cook 30–60s", note: "Rich—great in spicy broth." },
+      { name: "Shrimp", category: "Protein", prep: "Cook 1–2 min", note: "Shell-on for more flavor." },
+      { name: "Fish balls", category: "Protein", prep: "Cook 3–5 min", note: "Bouncy texture; watch for center heat." },
+      { name: "Spam", category: "Protein", prep: "Cook 30–60s", note: "Unreasonably good. Don’t @ me." },
+
+      // Seafood
+      { name: "Scallops", category: "Seafood", prep: "Cook 1–2 min", note: "Don’t overcook—stay tender." },
+      { name: "Squid", category: "Seafood", prep: "Cook 30–60s", note: "Quick cook keeps it soft." },
+      { name: "Mussels", category: "Seafood", prep: "Cook 3–6 min", note: "When open = ready." },
+
+      // Veggies
+      { name: "Napa cabbage", category: "Vegetable", prep: "Cook 1–3 min", note: "Soaks up broth like a sponge." },
+      { name: "Bok choy", category: "Vegetable", prep: "Cook 1–2 min", note: "Leaves cook fast; stems longer." },
+      { name: "Enoki mushrooms", category: "Mushroom", prep: "Cook 30–60s", note: "Bundle, dunk, devour." },
+      { name: "Shiitake mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Score tops for extra vibe." },
+      { name: "King oyster mushrooms", category: "Mushroom", prep: "Cook 2–4 min", note: "Meaty bite; slice thick." },
+      { name: "Lotus root", category: "Vegetable", prep: "Cook 3–6 min", note: "Crunchy, slightly sweet." },
+      { name: "Daikon radish", category: "Vegetable", prep: "Cook 4–8 min", note: "Goes translucent when ready." },
+      { name: "Corn", category: "Vegetable", prep: "Cook 4–6 min", note: "Sweet pops in the broth." },
+
+      // Tofu & friends
+      { name: "Firm tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Holds shape; great with sauces." },
+      { name: "Soft tofu", category: "Tofu", prep: "Warm 1–2 min", note: "Gentle handling. Spoon it." },
+      { name: "Fried tofu puffs", category: "Tofu", prep: "Warm 1–2 min", note: "Absorbs broth = flavor bombs." },
+
+      // Noodles & starch
+      { name: "Glass noodles", category: "Noodles", prep: "Cook 2–4 min", note: "Add near the end to avoid mush." },
+      { name: "Udon", category: "Noodles", prep: "Cook 2–3 min", note: "Chewy + hearty." },
+      { name: "Ramen noodles", category: "Noodles", prep: "Cook 1–3 min", note: "Watch closely—overcooks fast." },
+      { name: "Rice cakes (tteok)", category: "Starch", prep: "Cook 3–6 min", note: "Chewy; when they float, check bite." },
+      { name: "Dumplings", category: "Starch", prep: "Cook 5–8 min", note: "Keep simmering; don’t split." },
+
+      // Add-ons
+      { name: "Leafy greens mix", category: "Vegetable", prep: "Cook 30–90s", note: "Spinach/chrysanthemum greens = elite." },
+      { name: "Frozen tofu", category: "Tofu", prep: "Warm 2–3 min", note: "Spongey texture, huge broth uptake." },
+    ];
+
+    const state = {
+      q: "",
+      category: "All",
+      categories: []
+    };
+
+    const els = {
+      q: document.getElementById("q"),
+      chips: document.getElementById("chips"),
+      grid: document.getElementById("grid"),
+      stats: document.getElementById("stats"),
+      randomBtn: document.getElementById("randomBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+    };
+
+    function uniq(arr){ return Array.from(new Set(arr)); }
+
+    function buildCategories(){
+      const cats = uniq(INGREDIENTS.map(i => i.category)).sort((a,b)=>a.localeCompare(b));
+      state.categories = ["All", ...cats];
+    }
+
+    function renderChips(){
+      els.chips.innerHTML = "";
+      state.categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "chip" + (state.category === cat ? " active" : "");
+        btn.textContent = cat;
+        btn.type = "button";
+        btn.addEventListener("click", () => {
+          state.category = cat;
+          render();
+        });
+        els.chips.appendChild(btn);
+      });
+    }
+
+    function matches(item){
+      const q = state.q.trim().toLowerCase();
+      const inCategory = (state.category === "All") || (item.category === state.category);
+      if (!inCategory) return false;
+      if (!q) return true;
+      const hay = (item.name + " " + item.category + " " + (item.note||"") + " " + (item.prep||"")).toLowerCase();
+      return hay.includes(q);
+    }
+
+    function cardHTML(item){
+      return `
+        <article class="card">
+          <div class="top">
+            <h3 class="name">${escapeHTML(item.name)}</h3>
+            <span class="tag">${escapeHTML(item.category)}</span>
+          </div>
+          <div class="meta">
+            <span class="pill">⏱️ ${escapeHTML(item.prep || "Cook to taste")}</span>
+            ${item.note ? `<span class="pill">💡 ${escapeHTML(item.note)}</span>` : ""}
+          </div>
+          <p class="note">${suggestionFor(item.category)}</p>
+        </article>
+      `;
+    }
+
+    function suggestionFor(category){
+      const tips = {
+        "Protein": "Tip: cook meats in small batches so you don’t cool the broth down.",
+        "Seafood": "Tip: add seafood after the broth is back to a steady simmer.",
+        "Vegetable": "Tip: leafy greens go last; crunchy veg can hang out longer.",
+        "Mushroom": "Tip: mushrooms love broth time—don’t be shy.",
+        "Tofu": "Tip: tofu + sesame/garlic dip is a cheat code.",
+        "Noodles": "Tip: noodles near the end so they don’t over-soften.",
+        "Starch": "Tip: starches take longer—start them earlier if you want them ready."
+      };
+      return tips[category] || "Tip: mix textures—something crunchy, something chewy, something silky.";
+    }
+
+    function escapeHTML(str){
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[s]));
+    }
+
+    function render(){
+      // update chips active state
+      Array.from(els.chips.children).forEach(btn => {
+        btn.classList.toggle("active", btn.textContent === state.category);
+      });
+
+      const filtered = INGREDIENTS.filter(matches);
+      els.stats.textContent = `${filtered.length} ingredient${filtered.length === 1 ? "" : "s"} shown`;
+
+      if (filtered.length === 0){
+        els.grid.innerHTML = `
+          <div class="card" style="grid-column: span 12;">
+            <h3 class="name" style="margin:0 0 8px 0;">No matches 😅</h3>
+            <p class="note" style="margin:0;">Try a different search term (e.g., "tofu", "mushroom", "beef") or reset filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      els.grid.innerHTML = filtered.map(cardHTML).join("");
+    }
+
+    els.q.addEventListener("input", (e) => {
+      state.q = e.target.value;
+      render();
+    });
+
+    els.randomBtn.addEventListener("click", () => {
+      const pool = INGREDIENTS.filter(matches);
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      if (!pick) return;
+      // scroll to top and highlight by re-filtering to its name briefly
+      els.q.value = pick.name;
+      state.q = pick.name;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        // keep the name in search; feels like a "picked!" moment
+      }, 150);
+    });
+
+    els.resetBtn.addEventListener("click", () => {
+      state.q = "";
+      state.category = "All";
+      els.q.value = "";
+      renderChips();
+      render();
+    });
+
+    buildCategories();
+    renderChips();
+    render();
+  </script>
+</body>
+</html>
