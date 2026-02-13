@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>A Letter for You 💌</title>
+  <style>
+    :root {
+      --hotpink: #ff33cc;
+      --cyan: #00ffff;
+      --lime: #b6ff00;
+      --yellow: #ffe600;
+      --bg1: #090018;
+      --bg2: #001a2d;
+      --text: #ffffff;
+      --border: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 15%, rgba(255,51,204,.2), transparent 55%),
+        radial-gradient(900px 500px at 80% 25%, rgba(0,255,255,.15), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      padding: 20px 12px 60px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,.55);
+      border-bottom: 3px solid var(--border);
+      padding: 8px 12px;
+      margin: -20px -12px 20px -12px;
+    }
+    .navInner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--hotpink), var(--cyan), var(--lime), var(--yellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .homeBtn {
+      color: #000 !important;
+      background: var(--yellow) !important;
+      -webkit-background-clip: border-box !important;
+      background-clip: border-box !important;
+      padding: 6px 10px;
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+    }
+
+    .letterWrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .letterPaper {
+      background: linear-gradient(180deg, #fffef8 0%, #fdf9f0 100%);
+      color: #2c1810;
+      padding: 40px 36px 50px;
+      border: 4px solid var(--border);
+      box-shadow: 0 10px 0 rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.1);
+      position: relative;
+    }
+
+    .letterPaper::before {
+      content: "💌";
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      font-size: 28px;
+    }
+
+    .letterGreeting {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .letterBody {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      line-height: 1.75;
+      white-space: pre-line;
+    }
+
+    .letterSignOff {
+      margin-top: 32px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-style: italic;
+    }
+
+    .letterSignOff .heart {
+      color: var(--hotpink);
+    }
+
+    @media (max-width: 600px) {
+      .letterPaper { padding: 28px 22px 40px; }
+      .letterBody { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="navInner">
+      <a href="vanessa.html" class="homeBtn">← Back to Survey</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+
+  <div class="letterWrap">
+    <div class="letterPaper">
+      <p class="letterGreeting">Dear bebe,</p>
+      <div class="letterBody" id="letterBody">
+        If you're reading this letter, it means that you made the right decision to be my bebe for Valentine's! Hehe. I can't believe we've been in love for more than 2 and a half years now. You have made the past couple of years the best years of my life, and I would not spend it with anyone else on earth. The eternal roses that I got you symbolize our love, since they are sweet and soft, and last forever. I can't wait to spend Valentine's with you, and I'm excited to make more memories with you bebe! <3
+      </div>
+      <p class="letterSignOff">Love,<br/>Bebe<span class="heart">💖</span></p>
+    </div>
+  </div>
+</body>
+</html>
